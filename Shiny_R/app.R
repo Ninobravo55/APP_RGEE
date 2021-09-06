@@ -19,9 +19,9 @@
 # ---------------------------------------------------------------------
 
 # Activamos libreria GEE
-library(reticulate)
-library(rgee)
-library(googledrive)
+#library(reticulate)
+#library(rgee)
+#library(googledrive)
 
 # App GEE
 library(shiny)
@@ -41,9 +41,10 @@ nom_prov = Lista_Provincia$NOMBPROV
 
 # Iniciar sesion RGEE
 
-ee_Initialize("bravomoralesnino@gmail.com", drive = T) # Activa drive
+# ee_Initialize("bravomoralesnino@gmail.com", drive = T) # Activa drive
 
-
+# Agregar un featurecollection de limite Provincia Peru
+#limite_provincia = ee$FeatureCollection('users/bravomoralesnino/Tabla/Limite_Provincia')
 
 
 # -----------------------------------------------------------------------
@@ -154,32 +155,14 @@ server <- function(input, output) {
     })  
     
     
-    
-    
-    
-    
-    
-    
-    
-    # Conversion factor de escala
-    #Img_mean_clip_es <- Img_mean_clip$multiply(0.0001)
-    
-    # Simbologia Landsat 5 y 7
-    #viz_es <- list(bands = c('B5','B4','B3'),
-    #               min = 0.1, 
-    #               max = 0.6,
-    #               gamma = 1.6)
-    
-    
-    
-    
     # Salida del proyecto
     output$salida_otput <- renderPrint({
-        input$salir_input
+        salida <- input$salir_input
+        print(salida)
     })
     
     
 }
 
-# Run the application 
+# Ejecutar la aplicacion 
 shinyApp(ui = ui, server = server)
