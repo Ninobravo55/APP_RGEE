@@ -85,7 +85,7 @@ ui <- fluidPage(
                         choices = nom_prov, selected = "LEONCIO PRADO",multiple = F),
             
             # Seleccione la composicion bandas
-            selectInput(inputId = "RGB_input",
+            selectInput(inputId = "R_input",
                         label = "Seleccione Composicion bandas",
                         choices = c("B1"="B1","B2"="B2","B3"="B3","B4"="B4","B5"="B5","B6"="B6","B7"="B7")),
             
@@ -108,7 +108,7 @@ ui <- fluidPage(
             h3("Seleccion de la provincia:"),
             verbatimTextOutput("provincia_otput"),
             h3("Seleccion composicion bandas:"),
-            verbatimTextOutput("RGB_otput"),
+            verbatimTextOutput("R_otput"),
             h3("Salida de informacion:"),
             verbatimTextOutput("salida_otput"),
             
@@ -119,68 +119,38 @@ ui <- fluidPage(
 # Define server logic required to draw a histogram
 server <- function(input, output) {
     
-    
     # Seleccion imagen colleccion por satelite
     output$satelite_otput <- renderPrint({
         satelite <- input$Satelite_input
-        IC <- ee$ImageCollection(satelite)
-        
+        print(satelite)
     })
-    
     
     # Filtro de fecha de las imagenes collection
     output$rango_fecha_otput <- renderPrint({
         fecha_tex <- as.character(input$rango_fechas_input)
         fecha_inicial <- fecha_tex[1]
         fecha_final <- fecha_tex[2]
-
-        IC1 <- IC$filterDate(fecha_inicial, fecha_final)
-        
+        print(fecha_inicial)
+        print(fecha_final)
     })
     
     # Filtro de porcentaje de nubosidad
     output$nubosidad_otput <- renderPrint({
         nube <- input$nube_input
-        IC2 <- IC1$filterMetadata('CLOUD_COVER','less_than',nube)
+        print(nube)
     })
     
     # Filtro por zona de estudio
     output$provincia_otput <- renderPrint({
-        
-        limite_provincia = ee$FeatureCollection('users/bravomoralesnino/Tabla/Limite_Provincia')
-        
-        Feature <- limite_provincia$filterMetadata("NOMBPROV", 'equals', input$provincia_input)
-        Map$centerObject(Feature,8)
-        
-        # Visualizar Feature
-        Map$addLayer(Feature, list(color = "00FF11"), input$provincia_input)
-        
-        
-        IC3 <- IC2$filterBounds(Feature)
-        
-        # Realizar la median
-        IC_mean <- IC3$median()
-        
-        # Recorte de la imagen
-        Img_mean_clip <- IC_mean$clip(Feature)
-        
-        # Conversion factor de escala
-        Img_mean_clip_es <- Img_mean_clip$multiply(0.0001)
-        
-        # Simbologia Landsat 5 y 7
-        viz_es <- list(bands = c('B5','B4','B3'),
-                       min = 0.1, 
-                       max = 0.6,
-                       gamma = 1.6)
-        
+        Provincia <- input$provincia_input
+        print(Provincia)
         
     })
-    
-    
-    
+
     # Selecciona composicion de bandas
-    output$RGB_otput <- renderPrint({
-        input$RGB_input
+    output$R_otput <- renderPrint({
+        R <- input$R_input
+        print(R)
     })  
     
     
